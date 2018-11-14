@@ -1,0 +1,18 @@
+﻿  stdafx.cpp
+  Sem.cpp
+  Polish.cpp
+  Parm.cpp
+  MFST.cpp
+c:\users\user\desktop\курсовой проект\lek_2017\lek_2017\mfst.cpp(251): warning C4267: =: преобразование из "size_t" в "short"; возможна потеря данных
+  Log.cpp
+  LexAnaliz.cpp
+  LT.cpp
+  LEK_2017.cpp
+  In.cpp
+  IT.cpp
+  Gen.cpp
+  GRB.cpp
+  FST.cpp
+  Error.cpp
+  Создание кода...
+  LEK_2017.vcxproj -> C:\Users\User\Desktop\Курсовой проект\LEK_2017\Debug\LEK_2017.exe

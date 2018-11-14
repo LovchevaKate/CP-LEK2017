@@ -1,0 +1,2 @@
+main[ new string m;
+m="à";]

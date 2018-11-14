@@ -1,0 +1,8 @@
+main[
+new string n;
+n="l";
+new string m;
+m="k";
+new string g;
+catstring(n,m);
+]

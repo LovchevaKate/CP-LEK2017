@@ -1,0 +1,29 @@
+number function s(number d, number e)[
+	new number res;
+	res = d+e;
+	end res;
+]
+proc function three(string a, string b, number c, 5)[
+	new string r;
+	r = catstring(a, b);
+	print r;
+	print c;
+	endl;
+	end;
+]
+main[
+	new string str;
+	str="string";
+	new number tt;
+	tt = plength(str);
+	print tt;
+        new number x;
+        x = 7;
+	new number y;
+        y = -7;
+
+	new number t;
+	t = s(x, y)+x+y;
+
+	three("Summa", " is ", t);
+]

@@ -1,0 +1,267 @@
+Microsoft (R) Macro Assembler Version 14.12.25830.2	    12/19/17 14:35:02
+..\..\LEK_2017\LEK_2017\out.asm				     Page 1 - 1
+
+
+				.586
+				.model flat, stdcall
+				includelib libucrt.lib
+				includelib kernel32.lib
+				includelib "..\..\LEK_2017\Debug\LIB.lib"
+				ExitProcess PROTO :DWORD
+				.stack 4096
+
+
+				printnum PROTO: DWORD
+				printstr PROTO : DWORD
+				catstring PROTO : DWORD, : DWORD, : DWORD
+				plength PROTO : DWORD, : DWORD
+
+ 00000000			.const
+ 00000000 0D 0A 00				endl byte 13, 10, 0
+ 00000003 73 74 72 69 6E			L0 byte 'string', 0
+	   67 00
+ 0000000A 00000007				L1 sdword 7
+ 0000000E FFFFFFF9				L2 sdword -7
+ 00000012 53 75 6D 6D 61			L3 byte 'Summa', 0
+	   00
+ 00000018 20 69 73 20 00			L4 byte ' is ', 0
+ 00000000			.data
+ 00000000 00000000				temp sdword ?
+ 00000004  00000100 [				buffer byte 256 dup(0)
+	    00
+	   ]
+ 00000104 00000000				sres sdword 0
+ 00000108 00000000				sr dword ?
+ 0000010C 00000000				mainstr dword ?
+ 00000110 00000000				maintt sdword 0
+ 00000114 00000000				mainx sdword 0
+ 00000118 00000000				mainy sdword 0
+ 0000011C 00000000				maint sdword 0
+ 00000000			.code
+
+				;----------- s ------------
+ 00000000			s PROC,
+					sd : sdword, se : sdword  
+				; --- save registers ---
+ 00000003  53			push ebx
+ 00000004  52			push edx
+				; ----------------------
+ 00000005  FF 75 08		push sd
+ 00000008  FF 75 0C		push se
+ 0000000B  5B			pop ebx
+ 0000000C  58			pop eax
+ 0000000D  03 C3		add eax, ebx
+ 0000000F  50			push eax
+
+ 00000010  5B			pop ebx
+ 00000011  89 1D 00000104 R	mov sres, ebx
+
+				; --- restore registers ---
+ 00000017  5A			pop edx
+ 00000018  5B			pop ebx
+				; -------------------------
+ 00000019  A1 00000104 R	mov eax, sres
+ 0000001F  C2 0008		ret 8
+ 00000022			s ENDP
+				;------------------------------
+
+
+				;----------- three ------------
+ 00000022			three PROC,
+					sa : dword, sb : dword, sc : sdword  
+				; --- save registers ---
+ 00000025  53			push ebx
+ 00000026  52			push edx
+				; ----------------------
+
+ 00000027  FF 35 0000011C R	push maint
+ 0000002D  68 00000018 R	push offset L4
+ 00000032  68 00000012 R	push offset L3
+ 00000037  68 00000022 R	push three
+ 0000003C  FF 35 00000118 R	push mainy
+ 00000042  FF 35 00000114 R	push mainx
+ 00000048  68 00000000 R	push s
+ 0000004D  FF 35 0000011C R	push maint
+ 00000053  FF 35 0000011C R	push maint
+ 00000059  FF 35 0000000E R	push L2
+ 0000005F  FF 35 00000118 R	push mainy
+ 00000065  FF 35 00000118 R	push mainy
+ 0000006B  FF 35 0000000A R	push L1
+ 00000071  FF 35 00000114 R	push mainx
+ 00000077  FF 35 00000114 R	push mainx
+ 0000007D  FF 35 00000110 R	push maintt
+ 00000083  FF 35 0000010C R	push mainstr
+ 00000089  68 00000000 E	push plength
+ 0000008E  FF 35 00000110 R	push maintt
+ 00000094  FF 35 00000110 R	push maintt
+ 0000009A  68 00000003 R	push offset L0
+ 0000009F  FF 35 0000010C R	push mainstr
+ 000000A5  FF 35 0000010C R	push mainstr
+ 000000AB  FF 75 10		push sc
+ 000000AE  FF 35 00000108 R	push sr
+ 000000B4  FF 75 0C		push sb
+ 000000B7  FF 75 08		push sa
+ 000000BA  68 00000004 R	push offset buffer
+ 000000BF  E8 00000000 E	call catstring
+ 000000C4  83 C4 0C		add esp, 12
+ 000000C7  A3 00000108 R	mov sr, eax
+
+ 000000CC  FF 35 00000108 R	push sr
+ 000000D2  E8 00000000 E	call printstr
+ 000000D7  83 C4 04		add esp, 4
+
+
+ 000000DA  FF 75 10		push sc
+ 000000DD  E8 00000000 E	call printnum
+ 000000E2  83 C4 04		add esp, 4
+
+ 000000E5  68 00000000 R	push offset endl
+ 000000EA  E8 00000000 E	call printstr
+ 000000EF  83 C4 04		add esp, 4
+
+				; --- restore registers ---
+ 000000F2  5A			pop edx
+ 000000F3  5B			pop ebx
+				; -------------------------
+ 000000F5  C2 000C		ret 12
+ 000000F8			three ENDP
+				;------------------------------
+
+
+				;----------- MAIN ------------
+ 000000F8			main PROC
+ 000000F8  C7 05 0000010C R	mov mainstr, offset L0
+	   00000003 R
+
+ 00000102  FF 35 0000011C R	push maint
+ 00000108  68 00000018 R	push offset L4
+ 0000010D  68 00000012 R	push offset L3
+ 00000112  68 00000022 R	push three
+ 00000117  FF 35 00000118 R	push mainy
+ 0000011D  FF 35 00000114 R	push mainx
+ 00000123  68 00000000 R	push s
+ 00000128  FF 35 0000011C R	push maint
+ 0000012E  FF 35 0000011C R	push maint
+ 00000134  FF 35 0000000E R	push L2
+ 0000013A  FF 35 00000118 R	push mainy
+ 00000140  FF 35 00000118 R	push mainy
+ 00000146  FF 35 0000000A R	push L1
+ 0000014C  FF 35 00000114 R	push mainx
+ 00000152  FF 35 00000114 R	push mainx
+ 00000158  FF 35 00000110 R	push maintt
+ 0000015E  FF 35 0000010C R	push mainstr
+ 00000164  68 00000004 R	push offset buffer
+ 00000169  E8 00000000 E	call plength
+ 0000016E  83 C4 08		add esp, 8
+ 00000171  50			push eax
+
+ 00000172  5B			pop ebx
+ 00000173  89 1D 00000110 R	mov maintt, ebx
+
+
+ 00000179  FF 35 00000110 R	push maintt
+ 0000017F  E8 00000000 E	call printnum
+ 00000184  83 C4 04		add esp, 4
+
+ 00000187  FF 35 0000000A R	push L1
+
+ 0000018D  5B			pop ebx
+ 0000018E  89 1D 00000114 R	mov mainx, ebx
+
+ 00000194  FF 35 0000000E R	push L2
+
+ 0000019A  5B			pop ebx
+ 0000019B  89 1D 00000118 R	mov mainy, ebx
+
+
+ 000001A1  FF 35 0000011C R	push maint
+ 000001A7  68 00000018 R	push offset L4
+ 000001AC  68 00000012 R	push offset L3
+ 000001B1  68 00000022 R	push three
+ 000001B6  FF 35 00000118 R	push mainy
+ 000001BC  FF 35 00000114 R	push mainx
+ 000001C2  E8 FFFFFE39		call s
+ 000001C7  83 C4 0C		add esp, 12
+ 000001CA  50			push eax
+
+ 000001CB  5B			pop ebx
+ 000001CC  89 1D 0000011C R	mov maint, ebx
+
+
+ 000001D2  FF 35 0000011C R	push maint
+ 000001D8  68 00000018 R	push offset L4
+ 000001DD  68 00000012 R	push offset L3
+ 000001E2  E8 FFFFFE3B		call three
+ 000001E7  83 C4 10		add esp, 16
+
+ 000001EA  6A 00		push 0
+ 000001EC  E8 00000000 E	call ExitProcess
+ 000001F1			main ENDP
+				end main
+Microsoft (R) Macro Assembler Version 14.12.25830.2	    12/19/17 14:35:02
+..\..\LEK_2017\LEK_2017\out.asm				     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CONST  . . . . . . . . . . . . .	32 Bit	 0000001D Para	  Public  'CONST'	 ReadOnly
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000120 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000001F1 Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+catstring  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 000000F8 _TEXT	Length= 000000F9 Public STDCALL
+plength  . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+printnum . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+printstr . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+s  . . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000022 Public STDCALL
+  sd . . . . . . . . . . . . . .	DWord	 bp + 00000008
+  se . . . . . . . . . . . . . .	DWord	 bp + 0000000C
+three  . . . . . . . . . . . . .	P Near	 00000022 _TEXT	Length= 000000D6 Public STDCALL
+  sa . . . . . . . . . . . . . .	DWord	 bp + 00000008
+  sb . . . . . . . . . . . . . .	DWord	 bp + 0000000C
+  sc . . . . . . . . . . . . . .	DWord	 bp + 00000010
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+L0 . . . . . . . . . . . . . . .	Byte	 00000003 CONST	
+L1 . . . . . . . . . . . . . . .	DWord	 0000000A CONST	
+L2 . . . . . . . . . . . . . . .	DWord	 0000000E CONST	
+L3 . . . . . . . . . . . . . . .	Byte	 00000012 CONST	
+L4 . . . . . . . . . . . . . . .	Byte	 00000018 CONST	
+buffer . . . . . . . . . . . . .	Byte	 00000004 _DATA	
+endl . . . . . . . . . . . . . .	Byte	 00000000 CONST	
+mainstr  . . . . . . . . . . . .	DWord	 0000010C _DATA	
+maintt . . . . . . . . . . . . .	DWord	 00000110 _DATA	
+maint  . . . . . . . . . . . . .	DWord	 0000011C _DATA	
+mainx  . . . . . . . . . . . . .	DWord	 00000114 _DATA	
+mainy  . . . . . . . . . . . . .	DWord	 00000118 _DATA	
+sres . . . . . . . . . . . . . .	DWord	 00000104 _DATA	
+sr . . . . . . . . . . . . . . .	DWord	 00000108 _DATA	
+temp . . . . . . . . . . . . . .	DWord	 00000000 _DATA	
+
+	   0 Warnings
+	   0 Errors
